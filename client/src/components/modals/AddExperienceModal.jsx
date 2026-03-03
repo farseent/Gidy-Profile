@@ -13,7 +13,6 @@ export default function AddExperienceModal({ editItem, onClose }) {
     startDate: editItem?.startDate?.substring(0,10) || "",
     endDate: editItem?.endDate?.substring(0,10) || "",
     isCurrent: editItem?.isCurrent || false,
-    description: editItem?.description || "",
   });
   const [saving, setSaving] = useState(false);
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
@@ -53,10 +52,6 @@ export default function AddExperienceModal({ editItem, onClose }) {
           <input type="checkbox" checked={form.isCurrent} onChange={set("isCurrent")} className="rounded" />
           Currently working here
         </label>
-        <div>
-          <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Description</label>
-          <textarea value={form.description} onChange={set("description")} rows={3} className="input-field resize-none" />
-        </div>
       </div>
       <ModalFooter onSave={handleSave} onClose={onClose} saving={saving} />
     </Modal>

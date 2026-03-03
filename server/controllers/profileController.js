@@ -51,25 +51,46 @@ export const updateProfile = async (req, res) => {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
-    // Merge nested socialLinks / stats safely
-    if (req.body.socialLinks) {
-      req.body.socialLinks = { ...profile.socialLinks.toObject(), ...req.body.socialLinks };
+    // Only allow editable fields — email is never touched
+    const { firstName, lastName, location, bio, title, careerGoals, socialLinks } = req.body;
+
+    const updates = {};
+    if (firstName   !== undefined) updates.firstName   = firstName;
+    if (lastName    !== undefined) updates.lastName     = lastName;
+    if (location    !== undefined) updates.location     = location;
+    if (bio         !== undefined) updates.bio          = bio;
+    if (title       !== undefined) updates.title        = title;
+    if (careerGoals !== undefined) updates.careerGoals  = careerGoals;
+
+    // Merge nested socialLinks safely
+    if (socialLinks) {
+      updates.socialLinks = { ...profile.socialLinks.toObject(), ...JSON.parse(socialLinks) };
+    }
+
+    // File uploads → store relative paths as URLs
+    if (req.files?.avatar?.[0]) {
+      updates.avatarUrl = "/" + req.files.avatar[0].path.replace(/\\/g, "/");
+    }
+    if (req.files?.resume?.[0]) {
+      updates.resumeUrl = "/" + req.files.resume[0].path.replace(/\\/g, "/");
     }
 
     const updated = await Profile.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
+      { $set: updates },
+      { returnDocument: "after", runValidators: true }
     );
 
-    // Recalculate completion percentage
-    const skills = await Skill.find({ profileId: profile._id });
-    const experience = await Experience.find({ profileId: profile._id });
-    const education = await Education.find({ profileId: profile._id });
+    // Recalculate completion %
+    const [skills, experience, education] = await Promise.all([
+      Skill.find({ profileId: profile._id }),
+      Experience.find({ profileId: profile._id }),
+      Education.find({ profileId: profile._id }),
+    ]);
 
     const completionPercent = calculateProfileCompletion(updated, { skills, experience, education });
-    await Profile.findByIdAndUpdate(req.params.id, { profileCompletionPercent: completionPercent });
     updated.profileCompletionPercent = completionPercent;
+    await Profile.findByIdAndUpdate(req.params.id, { $set: { profileCompletionPercent: completionPercent } });
 
     res.json(updated);
   } catch (error) {

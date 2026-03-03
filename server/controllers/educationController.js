@@ -29,7 +29,7 @@ export const updateEducation = async (req, res) => {
     const edu = await Education.findOneAndUpdate(
       { _id: req.params.eduId, profileId: req.params.id },
       { $set: req.body },
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     );
     if (!edu) return res.status(404).json({ message: "Education not found" });
     res.json(edu);

@@ -7,13 +7,12 @@ const experienceSchema = new mongoose.Schema(
       ref: "Profile",
       required: true,
     },
-    title: { type: String, required: true, trim: true },      // e.g. "Intern"
-    company: { type: String, required: true, trim: true },    // e.g. "Bridgeon"
-    location: { type: String, default: "" },                  // e.g. "Kakkanchery, Kozhikode"
+    title: { type: String, required: true, trim: true },
+    company: { type: String, required: true, trim: true },
+    location: { type: String, default: "" }, 
     startDate: { type: Date, required: true },
-    endDate: { type: Date },                                  // null = present
+    endDate: { type: Date },
     isCurrent: { type: Boolean, default: false },
-    description: { type: String, default: "" },
     logoUrl: { type: String, default: "" },
   },
   { timestamps: true }

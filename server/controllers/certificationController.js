@@ -29,7 +29,7 @@ export const updateCertification = async (req, res) => {
     const cert = await Certification.findOneAndUpdate(
       { _id: req.params.certId, profileId: req.params.id },
       { $set: req.body },
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     );
     if (!cert) return res.status(404).json({ message: "Certification not found" });
     res.json(cert);

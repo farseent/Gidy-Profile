@@ -46,8 +46,8 @@ export default function EducationSection() {
                 : <GraduationCap size={16} className="text-gray-400" />}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] font-semibold text-gray-800">{edu.degree}</p>
-              <p className="text-[13px] text-gray-500">{edu.institution}{edu.university ? `, ${edu.university}` : ""}</p>
+              <p className="text-[14px] font-semibold text-gray-800">{edu.degree} - {edu.fieldOfStudy}</p>
+              <p className="text-[13px] text-gray-500">{edu.college}{edu.location ? `, ${edu.location}` : ""}</p>
               <p className="text-[12px] text-gray-400 mt-0.5">
                 {formatDate(edu.startDate)} — {formatDate(edu.endDate)}
               </p>
