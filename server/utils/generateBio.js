@@ -1,9 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-// 1. Initialize ONCE outside the function to save resources
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
+/**
+ * Generates a professional bio using Groq (free) based on profile data.
+ */
 export const generateAIBio = async ({
   name,
   title,
@@ -12,27 +11,34 @@ export const generateAIBio = async ({
   experience = [],
   careerGoals,
 }) => {
-  try {
-    const skillsList = skills.length ? skills.join(", ") : "Not specified";
-    const expList = experience.length
-      ? experience.map((e) => `${e.title} at ${e.company}`).join("; ")
-      : "None yet";
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-    const prompt = `Write a concise, professional 2-3 sentence bio for a profile page... (rest of your prompt)`;
+  const skillsList = skills.length ? skills.join(", ") : "Not specified";
+  const expList    = experience.length
+    ? experience.map((e) => `${e.title} at ${e.company}`).join("; ")
+    : "None yet";
 
-    // 2. Add a timeout or check if the API is responsive
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text().trim();
+  const prompt = `Write a concise, professional 2-3 sentence bio for a profile page.
+Person: ${name || "Professional"}
+Title: ${title || "Professional"}
+Location: ${location || ""}
+Skills: ${skillsList}
+Experience: ${expList}
+Career Goals: ${careerGoals || "Not specified"}
 
-  } catch (error) {
-    // 3. Graceful Error Handling
-    console.error("[generateAIBio Error]:", error.message);
+Guidelines:
+- First person voice ("I am...")
+- Enthusiastic but professional tone
+- Highlight key skills and experience
+- Mention career aspirations if goals are provided
+- Keep it under 60 words
+- Return ONLY the bio text, no labels or quotes`;
 
-    if (error.status === 429) {
-      throw new Error("AI service is currently busy. Please try again in a minute.");
-    }
-    
-    throw new Error("Failed to generate bio. Please fill it in manually for now.");
-  }
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.1-8b-instant",
+    max_tokens: 200,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  return completion.choices[0].message.content.trim();
 };
