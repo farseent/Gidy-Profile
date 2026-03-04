@@ -24,7 +24,7 @@ export default function Navbar() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l}
-                href="#"
+                href="#!"
                 className="px-2 py-1 text-[14px] text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
                 {l}

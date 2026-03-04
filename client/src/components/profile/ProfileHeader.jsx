@@ -479,7 +479,7 @@ export default function ProfileHeader() {
         </div>
 
         <div className="mt-3 text-right">
-          <a href="#" className="text-[13px] text-amber-600 font-medium hover:underline">
+          <a href="#!" className="text-[13px] text-amber-600 font-medium hover:underline">
             View My Rewards →
           </a>
         </div>
