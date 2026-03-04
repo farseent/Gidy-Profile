@@ -91,32 +91,50 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+// ─── Replace the generateBio export in profileController.js ───────────────
+
+// @desc    Generate AI bio from skills and experience
+// @route   POST /api/profile/:id/generate-bio
+// @access  Private
 export const generateBio = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
-    const skills = await Skill.find({ profileId: profile._id });
-    const experience = await Experience.find({ profileId: profile._id });
+    const [skills, experience] = await Promise.all([
+      Skill.find({ profileId: profile._id }),
+      Experience.find({ profileId: profile._id }),
+    ]);
+
+    // profile.name is a virtual — build it explicitly as a fallback so it
+    // is never undefined when passed to the AI utility
+    const fullName =
+      profile.firstName && profile.lastName
+        ? `${profile.firstName} ${profile.lastName}`
+        : profile.firstName || profile.lastName || "Professional";
 
     const aiBio = await generateAIBio({
-      name: profile.name,
-      title: profile.title,
-      location: profile.location,
-      skills: skills.map((s) => s.name),
-      experience: experience.map((e) => ({ title: e.title, company: e.company })),
-      careerGoals: profile.careerGoals,
+      name:        fullName,
+      title:       profile.title       || "",
+      location:    profile.location    || "",
+      skills:      skills.map((s) => s.name),
+      experience:  experience.map((e) => ({ title: e.title, company: e.company })),
+      careerGoals: profile.careerGoals || "",
     });
 
-    // Cache the generated bio
+    // Cache the generated bio on the profile document
     await Profile.findByIdAndUpdate(req.params.id, {
       aiBio,
       aiBioGeneratedAt: new Date(),
     });
 
+    // Also update the live bio field so the UI reflects it immediately
+    // (the frontend sets profile.bio from data.aiBio)
     res.json({ aiBio });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // Log the real error server-side so you can diagnose it
+    console.error("[generateBio] error:", error?.message ?? error);
+    res.status(500).json({ message: error?.message ?? "Failed to generate bio" });
   }
 };
 

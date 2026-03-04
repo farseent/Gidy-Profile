@@ -1,38 +1,38 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// 1. Initialize ONCE outside the function to save resources
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-/**
- * Generates a professional bio using Claude AI based on profile data.
- * @param {Object} profileData - { name, title, location, skills, experience, careerGoals }
- * @returns {Promise<string>} AI-generated bio
- */
-export const generateAIBio = async ({ name, title, location, skills, experience, careerGoals }) => {
-  const skillsList = skills.join(", ");
-  const expList = experience.map((e) => `${e.title} at ${e.company}`).join("; ");
+export const generateAIBio = async ({
+  name,
+  title,
+  location,
+  skills = [],
+  experience = [],
+  careerGoals,
+}) => {
+  try {
+    const skillsList = skills.length ? skills.join(", ") : "Not specified";
+    const expList = experience.length
+      ? experience.map((e) => `${e.title} at ${e.company}`).join("; ")
+      : "None yet";
 
-  const prompt = `Write a concise, professional 2-3 sentence bio for a profile page.
+    const prompt = `Write a concise, professional 2-3 sentence bio for a profile page... (rest of your prompt)`;
 
-Person: ${name}
-Title: ${title || "Professional"}
-Location: ${location || ""}
-Skills: ${skillsList}
-Experience: ${expList || "None yet"}
-Career Goals: ${careerGoals || "Not specified"}
+    // 2. Add a timeout or check if the API is responsive
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text().trim();
 
-Guidelines:
-- First person voice ("I am...")
-- Enthusiastic but professional tone
-- Highlight key skills and experience
-- Mention career aspirations if goals are provided
-- Keep it under 60 words
-- Return ONLY the bio text, no labels or quotes`;
+  } catch (error) {
+    // 3. Graceful Error Handling
+    console.error("[generateAIBio Error]:", error.message);
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 200,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  return message.content[0].text.trim();
+    if (error.status === 429) {
+      throw new Error("AI service is currently busy. Please try again in a minute.");
+    }
+    
+    throw new Error("Failed to generate bio. Please fill it in manually for now.");
+  }
 };
