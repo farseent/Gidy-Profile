@@ -8,6 +8,8 @@ import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 export const getProfile = async (req, res) => {
   try {
+    console.log("Looking for ID:", req.params.id);
+    console.log("DB:", mongoose.connection.db.databaseName);
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
