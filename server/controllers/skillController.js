@@ -1,4 +1,5 @@
 import Skill from "../models/Skill.js";
+import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 // @desc    Get all skills for a profile
 // @route   GET /api/profile/:id/skills
@@ -19,6 +20,7 @@ export const addSkill = async (req, res) => {
     if (exists) return res.status(400).json({ message: "Skill already added" });
 
     const skill = await Skill.create({ ...req.body, profileId: req.params.id });
+    await refreshProfileCompletion(req.params.id);
     res.status(201).json(skill);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -34,6 +36,7 @@ export const deleteSkill = async (req, res) => {
       profileId: req.params.id,
     });
     if (!skill) return res.status(404).json({ message: "Skill not found" });
+    await refreshProfileCompletion(req.params.id);
     res.json({ message: "Skill removed" });
   } catch (error) {
     res.status(500).json({ message: error.message });

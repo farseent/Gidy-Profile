@@ -1,4 +1,5 @@
 import Education from "../models/Education.js";
+import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 // @desc    Get all education for a profile
 // @route   GET /api/profile/:id/education
@@ -16,6 +17,7 @@ export const getEducation = async (req, res) => {
 export const addEducation = async (req, res) => {
   try {
     const edu = await Education.create({ ...req.body, profileId: req.params.id });
+    await refreshProfileCompletion(req.params.id);
     res.status(201).json(edu);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -32,6 +34,7 @@ export const updateEducation = async (req, res) => {
       { returnDocument: "after", runValidators: true }
     );
     if (!edu) return res.status(404).json({ message: "Education not found" });
+    await refreshProfileCompletion(req.params.id);
     res.json(edu);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -47,6 +50,7 @@ export const deleteEducation = async (req, res) => {
       profileId: req.params.id,
     });
     if (!edu) return res.status(404).json({ message: "Education not found" });
+    await refreshProfileCompletion(req.params.id);
     res.json({ message: "Education removed" });
   } catch (error) {
     res.status(500).json({ message: error.message });

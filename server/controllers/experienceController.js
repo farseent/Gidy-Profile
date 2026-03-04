@@ -1,4 +1,5 @@
 import Experience from "../models/Experience.js";
+import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 // @desc    Get all experience for a profile
 // @route   GET /api/profile/:id/experience
@@ -16,6 +17,8 @@ export const getExperience = async (req, res) => {
 export const addExperience = async (req, res) => {
   try {
     const exp = await Experience.create({ ...req.body, profileId: req.params.id });
+    // completion percent may change whenever experience is added
+    await refreshProfileCompletion(req.params.id);
     res.status(201).json(exp);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -32,6 +35,7 @@ export const updateExperience = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!exp) return res.status(404).json({ message: "Experience not found" });
+    await refreshProfileCompletion(req.params.id);
     res.json(exp);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -47,6 +51,7 @@ export const deleteExperience = async (req, res) => {
       profileId: req.params.id,
     });
     if (!exp) return res.status(404).json({ message: "Experience not found" });
+    await refreshProfileCompletion(req.params.id);
     res.json({ message: "Experience removed" });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -4,7 +4,7 @@ import Education from "../models/Education.js";
 import Skill from "../models/Skill.js";
 import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
-import { calculateProfileCompletion } from "../utils/profileCompletion.js";
+import { calculateProfileCompletion, refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 // @desc    Get full profile with all related data
 // @route   GET /api/profile/:id
@@ -81,16 +81,11 @@ export const updateProfile = async (req, res) => {
       { returnDocument: "after", runValidators: true }
     );
 
-    // Recalculate completion %
-    const [skills, experience, education] = await Promise.all([
-      Skill.find({ profileId: profile._id }),
-      Experience.find({ profileId: profile._id }),
-      Education.find({ profileId: profile._id }),
-    ]);
-
-    const completionPercent = calculateProfileCompletion(updated, { skills, experience, education });
+    // Recalculate completion % including certifications
+    const completionPercent = await refreshProfileCompletion(profile._id);
+    // "refresh" already updated the document and returned the value, but the
+    // local `updated` instance is stale so we overwrite before sending back.
     updated.profileCompletionPercent = completionPercent;
-    await Profile.findByIdAndUpdate(req.params.id, { $set: { profileCompletionPercent: completionPercent } });
 
     res.json(updated);
   } catch (error) {
