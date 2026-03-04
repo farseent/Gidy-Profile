@@ -34,6 +34,20 @@ export default function ProfileHeader() {
 
   if (!profile) return null;
 
+  const resolveUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url;
+    // if the API_URL ends in "/api", leave it off when building an arbitrary
+    // asset path; otherwise you end up requesting /api/uploads/… which our
+    // server doesn’t serve (we expose uploads at the root).  we also support
+    // the server providing full URLs so this function is safe to call on
+    // whatever comes back from the backend.
+    let base = process.env.REACT_APP_API_URL || "";
+    base = base.replace(/\/+$/g, "");
+    base = base.replace(/\/api$/i, "");
+    return base + url;
+  };
+
   const handleMenuClick = (key) => {
     setMenuOpen(false);
     if (key === "edit") setEditOpen(true);
@@ -67,7 +81,7 @@ export default function ProfileHeader() {
             {/* Avatar */}
             <div className="relative flex-shrink-0">
               {profile.avatarUrl ? (
-                <img src={profile.avatarUrl} alt={fullName}
+                <img src={resolveUrl(profile.avatarUrl)} alt={fullName}
                   className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md" />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-white text-2xl font-bold shadow-md">
@@ -134,8 +148,13 @@ export default function ProfileHeader() {
             )}
             <div className="flex items-center gap-2 flex-wrap">
               {profile.resumeUrl && (
-                <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-[13px] border border-gray-200 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
+                <a
+                  href={resolveUrl(profile.resumeUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="flex items-center gap-1.5 text-[13px] border border-gray-200 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <Download size={13} /> Download Resume
                 </a>
               )}

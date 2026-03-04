@@ -16,10 +16,24 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
+// make sure upload folders exist right away (helps when starting server
+// from a different working directory or before any file has been saved)
+import fs from "fs";
+import path from "path";
+fs.mkdirSync(path.join(process.cwd(), "uploads/avatars"), { recursive: true });
+fs.mkdirSync(path.join(process.cwd(), "uploads/resumes"), { recursive: true });
+
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// serve uploaded avatars/resumes so URLs stored in Mongo will resolve
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+// also expose under /api/uploads so links generated with an API base that
+// includes "/api" still work.  this avoids 404s when REACT_APP_API_URL ends
+// with "/api" (the common case during development).
+app.use("/api/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Routes
 app.use("/api/profile", profileRoutes);

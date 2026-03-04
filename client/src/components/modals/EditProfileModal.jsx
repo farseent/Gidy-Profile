@@ -19,7 +19,13 @@ export default function EditProfileModal({ onClose }) {
   });
 
   const [avatarFile,  setAvatarFile]  = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(profile?.avatarUrl || "");
+  const resolveUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url;
+    const base = process.env.REACT_APP_API_URL?.replace(/\/+$/g, "") || "";
+    return base + url;
+  };
+  const [avatarPreview, setAvatarPreview] = useState(resolveUrl(profile?.avatarUrl || ""));
   const [resumeFile,  setResumeFile]  = useState(null);
   const [saving, setSaving] = useState(false);
 

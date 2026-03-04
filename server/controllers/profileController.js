@@ -14,6 +14,15 @@ export const getProfile = async (req, res) => {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
+    // ensure any stored paths include host so the client can load them
+    const makeAbsolute = (url) => {
+      if (!url || url.startsWith("http")) return url;
+      const base = process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
+      return base + url;
+    };
+    profile.avatarUrl = makeAbsolute(profile.avatarUrl);
+    profile.resumeUrl = makeAbsolute(profile.resumeUrl);
+
     const [experience, education, skills, certifications] = await Promise.all([
       Experience.find({ profileId: profile._id }).sort({ startDate: -1 }),
       Education.find({ profileId: profile._id }).sort({ startDate: -1 }),
@@ -68,11 +77,22 @@ export const updateProfile = async (req, res) => {
     }
 
     // File uploads → store relative paths as URLs
+    // build an absolute URL so the client (regardless of origin) can reach the
+    // file.  we use the incoming request host as a default, but allow an env var
+    // to override when the server sits behind a proxy or is accessed via a
+    // different public hostname.
+    const publicBase =
+      process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
+
     if (req.files?.avatar?.[0]) {
-      updates.avatarUrl = "/" + req.files.avatar[0].path.replace(/\\/g, "/");
+      const rel = req.files.avatar[0].path.replace(/\\/g, "/");
+      console.log("avatar saved to", req.files.avatar[0].path);
+      updates.avatarUrl = `${publicBase}/${rel}`;
     }
     if (req.files?.resume?.[0]) {
-      updates.resumeUrl = "/" + req.files.resume[0].path.replace(/\\/g, "/");
+      const rel = req.files.resume[0].path.replace(/\\/g, "/");
+      console.log("resume saved to", req.files.resume[0].path);
+      updates.resumeUrl = `${publicBase}/${rel}`;
     }
 
     const updated = await Profile.findByIdAndUpdate(
