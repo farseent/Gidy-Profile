@@ -10,17 +10,16 @@ export const calculateProfileCompletion = (
 ) => {
   // weights are chosen to add up to 100; certifications added with a small portion
   const checks = [
-    { label: "Name",        value: !!profile.name,                  weight: 15 },
-    { label: "Bio",         value: !!profile.bio,                   weight: 15 },
+    { label: "Name",        value: !!profile.name,                  weight: 10 },
+    { label: "Bio",         value: !!profile.bio,                   weight: 10 },
     { label: "Avatar",      value: !!profile.avatarUrl,             weight: 10 },
     { label: "Location",    value: !!profile.location,              weight: 10 },
-    { label: "Title",       value: !!profile.title,                 weight: 5  },
     { label: "Email",       value: !!profile.email,                 weight: 10 },
     { label: "Resume",      value: !!profile.resumeUrl,             weight: 10 },
     { label: "Skills",      value: skills.length > 0,               weight: 10 },
     { label: "Experience",  value: experience.length > 0,           weight: 10 },
-    { label: "Education",   value: education.length > 0,            weight: 5  },
-    { label: "Certifications", value: certifications.length > 0,    weight: 5  },
+    { label: "Education",   value: education.length > 0,            weight: 10 },
+    { label: "Certifications", value: certifications.length > 0,    weight: 10 },
   ];
 
   const total = checks.reduce((sum, c) => sum + c.weight, 0);
