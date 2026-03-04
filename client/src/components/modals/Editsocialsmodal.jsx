@@ -50,14 +50,14 @@ export default function EditSocialsModal({ onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-slide-up">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-slide-up">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-800">Edit Socials</h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Edit Socials</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <X size={18} />
           </button>
@@ -66,14 +66,14 @@ export default function EditSocialsModal({ onClose }) {
         {/* Social rows */}
         <div className="flex flex-col gap-4 mb-6">
           {socials.length === 0 ? (
-            <p className="text-[13px] text-gray-400 text-center py-4">
+            <p className="text-[13px] text-gray-400 dark:text-gray-500 text-center py-4">
               No social links added yet.
             </p>
           ) : (
             socials.map((s) => (
               <div key={s.id} className="flex items-center gap-3">
                 {/* Platform label */}
-                <span className="text-[13px] font-medium text-gray-600 w-24 flex-shrink-0">
+                <span className="text-[13px] font-medium text-gray-600 dark:text-gray-300 w-24 flex-shrink-0">
                   {s.platform} :
                 </span>
 
@@ -82,13 +82,13 @@ export default function EditSocialsModal({ onClose }) {
                   type="url"
                   value={s.link}
                   onChange={(e) => handleChange(s.id, e.target.value)}
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-[13px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
+                  className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-[13px] text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500/40 transition"
                 />
 
                 {/* Confirm (tick) */}
                 <button
                   onClick={() => handleConfirmOne(s.id)}
-                  className="p-1.5 rounded-lg text-green-500 hover:bg-green-50 transition-colors flex-shrink-0"
+                  className="p-1.5 rounded-lg text-green-500 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors flex-shrink-0"
                   title="Save this link"
                 >
                   <Check size={16} />
@@ -97,7 +97,7 @@ export default function EditSocialsModal({ onClose }) {
                 {/* Delete (bin) */}
                 <button
                   onClick={() => handleDelete(s.id)}
-                  className="p-1.5 rounded-lg text-red-400 hover:bg-red-50 transition-colors flex-shrink-0"
+                  className="p-1.5 rounded-lg text-red-400 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
                   title="Remove this link"
                 >
                   <Trash2 size={16} />

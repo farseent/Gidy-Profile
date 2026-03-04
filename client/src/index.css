@@ -9,26 +9,30 @@
     background-color: #f1f5f9;
     color: #1e293b;
   }
+  .dark body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
 }
 
 @layer components {
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100;
+    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700;
   }
   .btn-primary {
-    @apply bg-gray-900 text-white font-medium px-4 py-2 rounded-xl hover:bg-gray-800 transition-colors duration-150 text-sm;
+    @apply bg-gray-900 dark:bg-gray-700 text-white font-medium px-4 py-2 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors duration-150 text-sm;
   }
   .btn-secondary {
-    @apply bg-white border border-gray-200 text-gray-700 font-medium px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors duration-150 text-sm;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium px-4 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150 text-sm;
   }
   .section-title {
-    @apply text-[15px] font-semibold text-gray-800;
+    @apply text-[15px] font-semibold text-gray-800 dark:text-gray-100;
   }
   .input-field {
-    @apply w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-400 transition-all;
+    @apply w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-400 transition-all;
   }
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full border border-gray-200 text-[13px] text-gray-700 bg-white hover:border-sky-400 hover:text-sky-600 transition-colors cursor-default;
+    @apply inline-flex items-center px-3 py-1 rounded-full border border-gray-200 dark:border-gray-600 text-[13px] text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:border-sky-400 hover:text-sky-600 dark:hover:border-sky-500 dark:hover:text-sky-400 transition-colors cursor-default;
   }
 }
 

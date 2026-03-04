@@ -10,12 +10,12 @@ export default function ProfileCompletion() {
     <div className="card p-4 animate-slide-up shadow-xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gray-100 rounded-xl flex items-center justify-center">
-            <GraduationCap size={18} className="text-gray-600" />
+          <div className="w-9 h-9 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
+            <GraduationCap size={18} className="text-gray-600 dark:text-gray-300" />
           </div>
           <div>
-            <p className="text-[13px] font-semibold text-gray-800">Profile Completed</p>
-            <p className="text-[12px] text-gray-500">
+            <p className="text-[13px] font-semibold text-gray-800 dark:text-gray-100">Profile Completed</p>
+            <p className="text-[12px] text-gray-500 dark:text-gray-400">
               {done ? "Mission complete! Profile at 100% and you're good to go!" : `${pct}% complete – keep going!`}
             </p>
           </div>
@@ -27,7 +27,7 @@ export default function ProfileCompletion() {
         )}
       </div>
       {!done && (
-        <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div className="mt-3 h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-sky-400 to-sky-600 rounded-full transition-all duration-500"
             style={{ width: `${pct}%` }}

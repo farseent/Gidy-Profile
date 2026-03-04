@@ -53,31 +53,31 @@ function AddSocialsModal({ socialLinks = {}, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-slide-up">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-slide-up">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Add Social</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Add Social</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
             <X size={16} />
           </button>
         </div>
 
         {available.length === 0 ? (
-          <p className="text-[13px] text-gray-500 text-center py-4">
+          <p className="text-[13px] text-gray-500 dark:text-gray-400 text-center py-4">
             All social platforms are already added.
           </p>
         ) : (
           <>
             <div className="mb-4">
-              <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+              <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Platform <span className="text-red-400">*</span>
               </label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300 transition-all appearance-none cursor-pointer"
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-[13px] text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-500/40 focus:border-sky-300 dark:focus:border-sky-500 transition-all appearance-none cursor-pointer"
               >
                 <option value="" disabled>Select platform…</option>
                 {available.map((p) => (
@@ -87,7 +87,7 @@ function AddSocialsModal({ socialLinks = {}, onClose, onSave }) {
             </div>
 
             <div className="mb-6">
-              <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+              <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Link <span className="text-red-400">*</span>
               </label>
               <input
@@ -95,7 +95,7 @@ function AddSocialsModal({ socialLinks = {}, onClose, onSave }) {
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 placeholder="https://"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300 transition-all"
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-[13px] text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-500/40 focus:border-sky-300 dark:focus:border-sky-500 transition-all"
               />
             </div>
           </>
@@ -161,12 +161,12 @@ function EditSocialsModal({ socialLinks = {}, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-slide-up">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-slide-up">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Edit Socials</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Edit Socials</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
             <X size={16} />
           </button>
@@ -348,7 +348,7 @@ export default function ProfileHeader() {
                 <img
                   src={resolveUrl(profile.avatarUrl)}
                   alt={fullName}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md"
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-md"
                 />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-white text-2xl font-bold shadow-md">
@@ -360,15 +360,15 @@ export default function ProfileHeader() {
             {/* Name / title / location */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center flex-wrap gap-2 mb-0.5">
-                <h1 className="text-xl font-bold text-gray-900">{fullName}</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">{fullName}</h1>
                 {profile.title && (
-                  <span className="text-sm text-gray-500 font-normal">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">
                     ( {profile.title} )
                   </span>
                 )}
               </div>
               {profile.location && (
-                <p className="text-[13px] text-gray-500">{profile.location}</p>
+                <p className="text-[13px] text-gray-500 dark:text-gray-400">{profile.location}</p>
               )}
             </div>
           </div>
@@ -385,7 +385,7 @@ export default function ProfileHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={label}
-                  className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-800"
+                  className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300"
                 >
                   <Icon size={17} />
                 </a>
@@ -396,20 +396,20 @@ export default function ProfileHeader() {
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen((o) => !o)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
+                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
               >
                 <MoreVertical size={18} />
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-8 z-50 w-44 bg-white border border-gray-100 rounded-xl shadow-lg py-1 animate-slide-up">
+                <div className="absolute right-0 top-8 z-50 w-44 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg py-1 animate-slide-up">
                   {MENU_ITEMS.map(({ icon: Icon, label, key }) => (
                     <button
                       key={key}
                       onClick={() => handleMenuClick(key)}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                      <Icon size={14} className="text-gray-400" />
+                      <Icon size={14} className="text-gray-400 dark:text-gray-500" />
                       {label}
                     </button>
                   ))}
@@ -421,7 +421,7 @@ export default function ProfileHeader() {
 
         {/* Bio */}
         {profile.bio && (
-          <p className="mt-4 text-[14px] text-gray-700 leading-relaxed">
+          <p className="mt-4 text-[14px] text-gray-700 dark:text-gray-300 leading-relaxed">
             {profile.bio}
           </p>
         )}
@@ -444,7 +444,7 @@ export default function ProfileHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="flex items-center gap-1.5 text-[13px] border border-gray-200 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-1.5 text-[13px] border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Download size={13} /> Download Resume
                 </a>

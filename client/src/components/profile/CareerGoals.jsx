@@ -36,14 +36,14 @@ export default function CareerGoals() {
         /* ── Filled card ── */
         <div className="card p-5 animate-slide-up shadow-xl">
           {/* Top section */}
-          <div className="flex items-start justify-between pb-4 border-b border-gray-100">
+          <div className="flex items-start justify-between pb-4 border-b border-gray-100 dark:border-gray-700">
             <div>
-              <p className="text-[12px] text-gray-400 mb-0.5">You're Career Vision</p>
-              <h2 className="text-lg font-bold text-gray-900">{goals.vision || "—"}</h2>
+              <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">You're Career Vision</p>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{goals.vision || "—"}</h2>
             </div>
             <button
               onClick={() => setModalOpen(true)}
-              className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center hover:bg-amber-100 transition-colors flex-shrink-0"
+              className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors flex-shrink-0"
             >
               <Sparkles size={16} className="text-amber-400" />
             </button>
@@ -52,16 +52,16 @@ export default function CareerGoals() {
           {/* Bottom three columns */}
           <div className="grid grid-cols-3 gap-4 pt-4">
             <div>
-              <p className="text-[12px] text-gray-400 mb-0.5">What you're growing into right now</p>
-              <p className="text-[14px] font-semibold text-gray-800">{goals.growingAs || "—"}</p>
+              <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">What you're growing into right now</p>
+              <p className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">{goals.growingAs || "—"}</p>
             </div>
             <div>
-              <p className="text-[12px] text-gray-400 mb-0.5">The space you want to grow in</p>
-              <p className="text-[14px] font-semibold text-gray-800">{goals.growSpace || "—"}</p>
+              <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">The space you want to grow in</p>
+              <p className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">{goals.growSpace || "—"}</p>
             </div>
             <div>
-              <p className="text-[12px] text-gray-400 mb-0.5">Inspired by</p>
-              <p className="text-[14px] font-semibold text-gray-800">{goals.inspiredBy || "—"}</p>
+              <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">Inspired by</p>
+              <p className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">{goals.inspiredBy || "—"}</p>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function CareerGoals() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="section-title mb-1">Tell us where you want to go</h2>
-              <p className="text-[13px] text-gray-500 max-w-sm">
+              <p className="text-[13px] text-gray-500 dark:text-gray-400 max-w-sm">
                 Add your career vision and what inspires you. This helps us tailor recommendations, learning paths, and opportunities just for you.
               </p>
             </div>

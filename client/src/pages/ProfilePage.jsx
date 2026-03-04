@@ -15,7 +15,7 @@ export default function ProfilePage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900">
       <Navbar />
       <main className="max-w-[1210px] mx-auto px-4 py-6 space-y-4">
         {/* Hero card */}

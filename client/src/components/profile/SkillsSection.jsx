@@ -49,8 +49,8 @@ export default function SkillsSection() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="section-title">Skills</h2>
         <button onClick={() => setAdding(p => !p)}
-          className="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-          <Plus size={14} className="text-gray-500" />
+          className="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <Plus size={14} className="text-gray-500 dark:text-gray-400" />
         </button>
       </div>
 
@@ -75,7 +75,7 @@ export default function SkillsSection() {
             <span>{sk.name}</span>
             {/* Endorsement count badge */}
             {sk.endorsementCount > 0 && (
-              <span className="ml-1 bg-sky-100 text-sky-600 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+              <span className="ml-1 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
                 +{sk.endorsementCount}
               </span>
             )}
@@ -99,7 +99,7 @@ export default function SkillsSection() {
           </div>
         ))}
         {skills.length === 0 && (
-          <p className="text-[13px] text-gray-400">No skills added yet. Click + to add your first skill.</p>
+          <p className="text-[13px] text-gray-400 dark:text-gray-500">No skills added yet. Click + to add your first skill.</p>
         )}
       </div>
 
@@ -119,9 +119,9 @@ function EndorseDialog({ skill, onEndorse, onClose }) {
   const [name, setName] = useState("");
   return (
     <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm animate-slide-up">
-        <h3 className="font-semibold text-gray-900 mb-1">Endorse "{skill?.name}"</h3>
-        <p className="text-[13px] text-gray-500 mb-4">Add your name to endorse this skill</p>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-sm animate-slide-up">
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Endorse "{skill?.name}"</h3>
+        <p className="text-[13px] text-gray-500 dark:text-gray-400 mb-4">Add your name to endorse this skill</p>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
