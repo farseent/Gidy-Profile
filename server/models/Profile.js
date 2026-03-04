@@ -18,7 +18,6 @@ const profileSchema = new mongoose.Schema(
     firstName: { type: String, required: true, trim: true },
     lastName:  { type: String, required: true, trim: true },
 
-    title:    { type: String, default: "" },
     location: { type: String, default: "" },
     bio:      { type: String, default: "", maxlength: 500 },
 
