@@ -42,5 +42,5 @@ profileSchema.virtual("name").get(function () {
   return `${this.firstName} ${this.lastName}`.trim();
 });
 
-const Profile = mongoose.model("Profile", profileSchema);
+const Profile = mongoose.model("Profile", profileSchema, "profile");
 export default Profile;

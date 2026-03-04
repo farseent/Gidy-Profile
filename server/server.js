@@ -12,7 +12,9 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 dotenv.config();
 
 const app = express();
-
+// temporary debug - remove after fix
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
+console.log("CLIENT_URL:", process.env.CLIENT_URL);
 // Connect to MongoDB
 connectDB();
 
