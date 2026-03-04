@@ -5,12 +5,9 @@ import Skill from "../models/Skill.js";
 import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
 import { refreshProfileCompletion } from "../utils/profileCompletion.js";
-import mongoose from "mongoose";
 
 export const getProfile = async (req, res) => {
   try {
-    console.log("Looking for ID:", req.params.id);
-    console.log("DB:", mongoose.connection.db.databaseName);
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
