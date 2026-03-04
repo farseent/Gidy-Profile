@@ -5,6 +5,7 @@ import Skill from "../models/Skill.js";
 import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
 import { refreshProfileCompletion } from "../utils/profileCompletion.js";
+import mongoose from "mongoose";
 
 export const getProfile = async (req, res) => {
   try {
