@@ -6,15 +6,11 @@ import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
 import { calculateProfileCompletion, refreshProfileCompletion } from "../utils/profileCompletion.js";
 
-// @desc    Get full profile with all related data
-// @route   GET /api/profile/:id
-// @access  Public
 export const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
-    // ensure any stored paths include host so the client can load them
     const makeAbsolute = (url) => {
       if (!url || url.startsWith("http")) return url;
       const base = process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
@@ -36,9 +32,6 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// @desc    Create a new profile
-// @route   POST /api/profile
-// @access  Public
 export const createProfile = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -52,15 +45,11 @@ export const createProfile = async (req, res) => {
   }
 };
 
-// @desc    Update profile
-// @route   PUT /api/profile/:id
-// @access  Private
 export const updateProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
-    // Only allow editable fields — email is never touched
     const { firstName, lastName, location, bio, title, careerGoals, socialLinks } = req.body;
 
     const updates = {};
@@ -71,16 +60,9 @@ export const updateProfile = async (req, res) => {
     if (title       !== undefined) updates.title        = title;
     if (careerGoals !== undefined) updates.careerGoals  = careerGoals;
 
-    // Merge nested socialLinks safely
     if (socialLinks) {
       updates.socialLinks = { ...profile.socialLinks.toObject(), ...JSON.parse(socialLinks) };
     }
-
-    // File uploads → store relative paths as URLs
-    // build an absolute URL so the client (regardless of origin) can reach the
-    // file.  we use the incoming request host as a default, but allow an env var
-    // to override when the server sits behind a proxy or is accessed via a
-    // different public hostname.
     const publicBase =
       process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
 
@@ -100,11 +82,7 @@ export const updateProfile = async (req, res) => {
       { $set: updates },
       { returnDocument: "after", runValidators: true }
     );
-
-    // Recalculate completion % including certifications
     const completionPercent = await refreshProfileCompletion(profile._id);
-    // "refresh" already updated the document and returned the value, but the
-    // local `updated` instance is stale so we overwrite before sending back.
     updated.profileCompletionPercent = completionPercent;
 
     res.json(updated);
@@ -113,9 +91,6 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// @desc    Generate AI bio from skills and experience (Innovation)
-// @route   POST /api/profile/:id/generate-bio
-// @access  Private
 export const generateBio = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
@@ -140,6 +115,35 @@ export const generateBio = async (req, res) => {
     });
 
     res.json({ aiBio });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const ALLOWED_SOCIAL_KEYS = ["github", "linkedin", "twitter", "website"];
+export const updateSocialLinks = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+    if (!profile) return res.status(404).json({ message: "Profile not found" });
+
+    const setFields = {};
+    for (const key of ALLOWED_SOCIAL_KEYS) {
+      if (req.body[key] !== undefined) {
+        setFields[`socialLinks.${key}`] = req.body[key].trim();
+      }
+    }
+
+    if (Object.keys(setFields).length === 0) {
+      return res.status(400).json({ message: "No valid social link fields provided" });
+    }
+
+    const updated = await Profile.findByIdAndUpdate(
+      req.params.id,
+      { $set: setFields },
+      { returnDocument: "after", runValidators: true }
+    );
+
+    res.json({ socialLinks: updated.socialLinks });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

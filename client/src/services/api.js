@@ -1,20 +1,13 @@
 import axios from "axios";
 
-// do not set a default Content-Type; axios will choose
-// application/json when sending a plain object and multipart/form-data
-// (with boundary) when passing FormData.  setting a global header earlier
-// prevented file uploads from working.
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
 export const getProfile       = (id)              => api.get(`/profile/${id}`);
 export const createProfile    = (data)            => api.post(`/profile`, data);
-// when updating the profile we may send files, so explicitly allow
-// multipart/form-data (axios will overwrite the header automatically if
-// `data` is FormData, but we don't want the old default interfering).
-export const updateProfile    = (id, data)        =>
-  api.put(`/profile/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } });
+export const updateProfile    = (id, data)        => api.put(`/profile/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } });
+export const updateSocialLinksAPI = (profileId, payload) => api.patch(`/profile/${profileId}/social-links`, payload);
 export const generateAIBio    = (id)              => api.post(`/profile/${id}/generate-bio`);
 
 export const addExperience    = (id, data)        => api.post(`/profile/${id}/experience`, data);
