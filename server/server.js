@@ -24,7 +24,7 @@ fs.mkdirSync(path.join(process.cwd(), "uploads/avatars"), { recursive: true });
 fs.mkdirSync(path.join(process.cwd(), "uploads/resumes"), { recursive: true });
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000" }));
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
