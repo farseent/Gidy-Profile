@@ -17,7 +17,7 @@ export default function CareerGoals() {
     catch { return {}; }
   })();
 
-  const hasGoals = goals.vision || goals.growingAs || goals.growSpace || goals.inspiredBy;
+  const hasGoals = goals.vision || goals.describedAs || goals.growSpace || goals.inspiredBy || goals.aimingFor;
 
   const handleSave = async (form) => {
     try {
@@ -53,7 +53,7 @@ export default function CareerGoals() {
           <div className="grid grid-cols-3 gap-4 pt-4">
             <div>
               <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">What you're growing into right now</p>
-              <p className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">{goals.growingAs || "—"}</p>
+              <p className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">{goals.aimingFor || "—"}</p>
             </div>
             <div>
               <p className="text-[12px] text-gray-400 dark:text-gray-500 mb-0.5">The space you want to grow in</p>

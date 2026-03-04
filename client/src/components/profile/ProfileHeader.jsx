@@ -327,6 +327,11 @@ export default function ProfileHeader() {
     }
   };
 
+  const goals = (() => {
+    try { return JSON.parse(profile?.careerGoals || "{}"); }
+    catch { return {}; }
+  })();
+
   const fullName =
     profile.firstName && profile.lastName
       ? `${profile.firstName} ${profile.lastName}`
@@ -363,7 +368,7 @@ export default function ProfileHeader() {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">{fullName}</h1>
                 {profile.title && (
                   <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">
-                    ( {profile.title} )
+                    ( {goals.describedAs} )
                   </span>
                 )}
               </div>

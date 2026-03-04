@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 
-function Field({ label, value, onChange, placeholder }) {
+function Field({ label, value, onChange, placeholder, required }) {
   return (
     <div>
-      <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">{label}</label>
+      <label className="block text-[13px] font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+      </label>
       <input
         type="text"
         value={value}
@@ -18,10 +20,11 @@ function Field({ label, value, onChange, placeholder }) {
 
 export default function CareerVisionModal({ initial, onClose, onSave }) {
   const [form, setForm] = useState({
-    vision: initial?.vision || "",
-    growingAs: initial?.growingAs || "",
-    growSpace: initial?.growSpace || "",
-    inspiredBy: initial?.inspiredBy || "",
+    describedAs:  initial?.describedAs  || "",
+    vision:       initial?.vision       || "",
+    growSpace:    initial?.growSpace    || "",
+    inspiredBy:   initial?.inspiredBy   || "",
+    aimingFor:    initial?.aimingFor    || "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -36,15 +39,14 @@ export default function CareerVisionModal({ initial, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-center justify-center p-4">  
+    <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-slide-up">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
           <h2 className="font-semibold text-gray-900 dark:text-white text-base">
             Career Vision
           </h2>
-
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
@@ -56,31 +58,43 @@ export default function CareerVisionModal({ initial, onClose, onSave }) {
         {/* Fields */}
         <div className="px-6 py-5 space-y-4">
           <Field
-            label="You're Career Vision"
+            label="What Best Describes You?"
+            placeholder="e.g. Final-Year Student"
+            value={form.describedAs}
+            onChange={set("describedAs")}
+            required
+          />
+
+          <Field
+            label="What Is Your Long-Term Career Aspiration?"
             placeholder="e.g. AI / ML Architect"
             value={form.vision}
             onChange={set("vision")}
+            required
           />
 
           <Field
-            label="What you're growing into right now"
-            placeholder="e.g. Student"
-            value={form.growingAs}
-            onChange={set("growingAs")}
-          />
-
-          <Field
-            label="The space you want to grow in"
+            label="Aspirational Field"
             placeholder="e.g. AI / ML Engineering"
             value={form.growSpace}
             onChange={set("growSpace")}
+            required
           />
 
           <Field
-            label="Inspired by"
-            placeholder="e.g. everything"
+            label="Who Is Your Inspiration?"
+            placeholder="e.g. Steve Jobs"
             value={form.inspiredBy}
             onChange={set("inspiredBy")}
+            required
+          />
+
+          <Field
+            label="What Are You Aiming For Right Now?"
+            placeholder="e.g. Entry Level Professional"
+            value={form.aimingFor}
+            onChange={set("aimingFor")}
+            required
           />
         </div>
 
@@ -98,11 +112,10 @@ export default function CareerVisionModal({ initial, onClose, onSave }) {
             disabled={saving}
             className="btn-primary flex-1"
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? "Saving..." : "Update"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-

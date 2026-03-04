@@ -4,7 +4,7 @@ import Education from "../models/Education.js";
 import Skill from "../models/Skill.js";
 import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
-import { calculateProfileCompletion, refreshProfileCompletion } from "../utils/profileCompletion.js";
+import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
 export const getProfile = async (req, res) => {
   try {
