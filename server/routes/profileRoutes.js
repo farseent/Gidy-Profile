@@ -6,13 +6,13 @@ import {
   generateBio,
   updateSocialLinks,
 } from "../controllers/profileController.js";
-import { upload } from "../middleware/profile.controller.js";
+import { uploadMiddleware } from "../middleware/upload.js";
 
 const router = express.Router();
 
 router.post("/", createProfile);
 router.get("/:id", getProfile);
-router.put("/:id", upload, updateProfile);
+router.put("/:id", uploadMiddleware, updateProfile);
 router.post("/:id/generate-bio", generateBio);
 router.patch("/:id/social-links", updateSocialLinks);
 

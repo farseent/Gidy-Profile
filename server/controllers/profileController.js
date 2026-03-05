@@ -6,18 +6,12 @@ import Certification from "../models/Certification.js";
 import { generateAIBio } from "../utils/generateBio.js";
 import { refreshProfileCompletion } from "../utils/profileCompletion.js";
 
+// ─── Get Profile ──────────────────────────────────────────────────────────────
+
 export const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
-
-    const makeAbsolute = (url) => {
-      if (!url || url.startsWith("http")) return url;
-      const base = process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
-      return base + url;
-    };
-    profile.avatarUrl = makeAbsolute(profile.avatarUrl);
-    profile.resumeUrl = makeAbsolute(profile.resumeUrl);
 
     const [experience, education, skills, certifications] = await Promise.all([
       Experience.find({ profileId: profile._id }).sort({ startDate: -1 }),
@@ -32,11 +26,16 @@ export const getProfile = async (req, res) => {
   }
 };
 
+// ─── Create Profile ───────────────────────────────────────────────────────────
+
 export const createProfile = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { email } = req.body;
     const exists = await Profile.findOne({ email });
-    if (exists) return res.status(400).json({ message: "Profile already exists for this email" });
+    if (exists)
+      return res
+        .status(400)
+        .json({ message: "Profile already exists for this email" });
 
     const profile = await Profile.create(req.body);
     res.status(201).json(profile);
@@ -45,36 +44,36 @@ export const createProfile = async (req, res) => {
   }
 };
 
+// ─── Update Profile ───────────────────────────────────────────────────────────
+
 export const updateProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ message: "Profile not found" });
 
-    const { firstName, lastName, location, bio, title, careerGoals, socialLinks } = req.body;
+    const { firstName, lastName, location, bio, careerGoals, socialLinks } =
+      req.body;
 
     const updates = {};
     if (firstName   !== undefined) updates.firstName   = firstName;
     if (lastName    !== undefined) updates.lastName     = lastName;
     if (location    !== undefined) updates.location     = location;
     if (bio         !== undefined) updates.bio          = bio;
-    if (title       !== undefined) updates.title        = title;
     if (careerGoals !== undefined) updates.careerGoals  = careerGoals;
 
     if (socialLinks) {
-      updates.socialLinks = { ...profile.socialLinks.toObject(), ...JSON.parse(socialLinks) };
+      updates.socialLinks = {
+        ...profile.socialLinks.toObject(),
+        ...JSON.parse(socialLinks),
+      };
     }
-    const publicBase =
-      process.env.SERVER_URL || `${req.protocol}://${req.get("host")}`;
 
+    // Cloudinary URLs — set by uploadMiddleware
     if (req.files?.avatar?.[0]) {
-      const rel = req.files.avatar[0].path.replace(/\\/g, "/");
-      console.log("avatar saved to", req.files.avatar[0].path);
-      updates.avatarUrl = `${publicBase}/${rel}`;
+      updates.avatarUrl = req.files.avatar[0].cloudinaryUrl;
     }
     if (req.files?.resume?.[0]) {
-      const rel = req.files.resume[0].path.replace(/\\/g, "/");
-      console.log("resume saved to", req.files.resume[0].path);
-      updates.resumeUrl = `${publicBase}/${rel}`;
+      updates.resumeUrl = req.files.resume[0].cloudinaryUrl;
     }
 
     const updated = await Profile.findByIdAndUpdate(
@@ -82,6 +81,7 @@ export const updateProfile = async (req, res) => {
       { $set: updates },
       { returnDocument: "after", runValidators: true }
     );
+
     const completionPercent = await refreshProfileCompletion(profile._id);
     updated.profileCompletionPercent = completionPercent;
 
@@ -91,11 +91,8 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// ─── Replace the generateBio export in profileController.js ───────────────
+// ─── Generate AI Bio ──────────────────────────────────────────────────────────
 
-// @desc    Generate AI bio from skills and experience
-// @route   POST /api/profile/:id/generate-bio
-// @access  Private
 export const generateBio = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
@@ -106,8 +103,6 @@ export const generateBio = async (req, res) => {
       Experience.find({ profileId: profile._id }),
     ]);
 
-    // profile.name is a virtual — build it explicitly as a fallback so it
-    // is never undefined when passed to the AI utility
     const fullName =
       profile.firstName && profile.lastName
         ? `${profile.firstName} ${profile.lastName}`
@@ -122,23 +117,22 @@ export const generateBio = async (req, res) => {
       careerGoals: profile.careerGoals || "",
     });
 
-    // Cache the generated bio on the profile document
     await Profile.findByIdAndUpdate(req.params.id, {
       aiBio,
       aiBioGeneratedAt: new Date(),
     });
 
-    // Also update the live bio field so the UI reflects it immediately
-    // (the frontend sets profile.bio from data.aiBio)
     res.json({ aiBio });
   } catch (error) {
-    // Log the real error server-side so you can diagnose it
     console.error("[generateBio] error:", error?.message ?? error);
     res.status(500).json({ message: error?.message ?? "Failed to generate bio" });
   }
 };
 
+// ─── Update Social Links ──────────────────────────────────────────────────────
+
 const ALLOWED_SOCIAL_KEYS = ["github", "linkedin", "twitter", "website"];
+
 export const updateSocialLinks = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
@@ -152,7 +146,9 @@ export const updateSocialLinks = async (req, res) => {
     }
 
     if (Object.keys(setFields).length === 0) {
-      return res.status(400).json({ message: "No valid social link fields provided" });
+      return res
+        .status(400)
+        .json({ message: "No valid social link fields provided" });
     }
 
     const updated = await Profile.findByIdAndUpdate(
