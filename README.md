@@ -1,120 +1,389 @@
 # Gidy Profile Project
 
-A full-stack MERN application that replicates the Gidy.ai profile page with edit functionality and innovative AI-powered features.
-
-## Live Demo
-[https://gidy-profile.vercel.app](https://gidy-profile.vercel.app) *(deploy after setup)*
+A high-fidelity full-stack MERN application that replicates the profile page from [Gidy.ai](https://gidy.ai) with powerful edit functionality, AI-enhanced features, and a polished, responsive user experience.
 
 ---
 
-## Tech Stack
+## 🎯 Project Overview
 
-| Layer     | Technology                          |
-|-----------|-------------------------------------|
-| Frontend  | React 18, Vite, Tailwind CSS        |
-| Backend   | Node.js, Express.js (ESM)           |
-| Database  | MongoDB Atlas + Mongoose            |
-| AI        | Anthropic Claude API (claude-sonnet-4)|
-| Hosting   | Vercel (frontend) + Render (backend)|
+This is a complete implementation of the **"The Profile Project"** challenge from Gidy.ai. The application demonstrates end-to-end full-stack development capabilities, from database schema design to pixel-perfect CSS implementation.
+
+### Core Features ✅
+
+- **Responsive Profile UI**: Pixel-perfect replica of the Gidy.ai profile page with a clean, modern design
+- **Live Data Integration**: Fetch and display profile data from a RESTful backend
+- **Edit Mode**: Seamless edit experience to update profile information with instant persistence
+- **Comprehensive Profile Sections**: Name, Bio, Profile Picture, Social Links, Skills, Experience, Education, and Certifications
+- **Dark Mode**: Toggle between light and dark themes with persistent settings
+- **Profile Completion Tracker**: Visual indicator showing profile completeness
 
 ---
 
-## Setup Instructions
+## 📱 Live Demo & Code
+
+- **Live Link**: [https://gidy-profile.vercel.app](https://gidy-profile.vercel.app)
+- **GitHub Repository**: [https://github.com/your-username/gidy-profile](https://github.com/your-username/gidy-profile)
+
+---
+
+## 🛠 Tech Stack
+
+| Layer        | Technology                           | Purpose                   |
+| ------------ | ------------------------------------ | ------------------------- |
+| **Frontend** | React 18 + Vite                      | UI framework & build tool |
+| **Styling**  | Tailwind CSS                         | Utility-first CSS         |
+| **Backend**  | Node.js + Express.js (ESM)           | RESTful API server        |
+| **Database** | MongoDB + Mongoose                   | NoSQL data persistence    |
+| **AI**       | Anthropic Claude API (sonnet-4)      | AI bio generation         |
+| **Hosting**  | Vercel (frontend) + Render (backend) | Production deployment     |
+| **HTTP**     | Axios                                | Frontend API client       |
+| **Utils**    | UUID, Dotenv                         | Utilities & configuration |
+
+---
+
+## 🚀 Setup Instructions
 
 ### Prerequisites
-- Node.js 18+
-- MongoDB Atlas account (or local MongoDB)
-- Anthropic API key (for AI Bio feature)
+
+- **Node.js** 18+ and npm
+- **MongoDB Atlas** account (free tier available) or local MongoDB instance
+- **Anthropic API key** (for AI bio generation feature)
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/your-username/gidy-profile.git
 cd gidy-profile
 ```
 
-### 2. Backend setup
+### 2. Backend Setup
+
 ```bash
 cd server
+
+# Create environment file
 cp .env.example .env
-# Fill in MONGO_URI and ANTHROPIC_API_KEY in .env
+
+# Edit .env and add these variables:
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/gidy-profile
+# ANTHROPIC_API_KEY=sk-your-api-key-here
+# PORT=5000
+
+# Install dependencies and run
 npm install
-npm run dev        # runs on http://localhost:5000
+npm run dev        # Server runs on http://localhost:5000
 ```
 
-### 3. Frontend setup
+### 3. Frontend Setup
+
 ```bash
-cd client
+cd ../client
+
+# Create environment file
 cp .env.example .env
-# Set VITE_PROFILE_ID to your seeded profile's MongoDB _id
+
+# Edit .env and add:
+# VITE_API_BASE_URL=http://localhost:5000
+
 npm install
-npm run dev        # runs on http://localhost:5173
+npm run dev        # Frontend runs on http://localhost:5173
 ```
 
-### 4. Seed a demo profile
+### 4. Seed Initial Profile Data
+
+Open your browser and POST to `http://localhost:5000/api/profile`:
+
 ```bash
-# POST to http://localhost:5000/api/profile with JSON body:
-{
-  "name": "Farseen T",
-  "title": "Final-Year Student",
-  "location": "Malappuram, Kerala",
-  "email": "farseen247@gmail.com",
-  "bio": "I am a final-year B.Tech student and aspiring Software Developer..."
-}
-# Copy the returned _id into client/.env as VITE_PROFILE_ID
+curl -X POST http://localhost:5000/api/profile \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Your Name",
+    "title": "Your Title",
+    "location": "City, Country",
+    "email": "your-email@example.com",
+    "bio": "Your professional bio...",
+    "profileImage": "https://example.com/image.jpg",
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/yourprofile",
+      "github": "https://github.com/yourprofile",
+      "twitter": "https://twitter.com/yourprofile"
+    }
+  }'
+```
+
+The response will include an `_id`. Update `client/.env`:
+
+```
+VITE_PROFILE_ID=<paste-the-id-here>
 ```
 
 ---
 
-## API Endpoints
+## 📚 API Documentation
 
-| Method | Endpoint                                    | Description                     |
-|--------|---------------------------------------------|---------------------------------|
-| GET    | /api/profile/:id                            | Get full profile                |
-| POST   | /api/profile                                | Create profile                  |
-| PUT    | /api/profile/:id                            | Update profile                  |
-| POST   | /api/profile/:id/generate-bio               | **AI Bio Generation**           |
-| POST   | /api/profile/:id/experience                 | Add experience                  |
-| PUT    | /api/profile/:id/experience/:expId          | Edit experience                 |
-| DELETE | /api/profile/:id/experience/:expId          | Delete experience               |
-| POST   | /api/profile/:id/skills                     | Add skill                       |
-| DELETE | /api/profile/:id/skills/:skillId            | Delete skill                    |
-| POST   | /api/profile/:id/skills/:skillId/endorse    | **Endorse a skill**             |
-| POST   | /api/profile/:id/education                  | Add education                   |
-| PUT    | /api/profile/:id/education/:eduId           | Edit education                  |
-| DELETE | /api/profile/:id/education/:eduId           | Delete education                |
-| POST   | /api/profile/:id/certifications             | Add certification               |
-| PUT    | /api/profile/:id/certifications/:certId     | Edit certification              |
-| DELETE | /api/profile/:id/certifications/:certId     | Delete certification            |
+### Profile Endpoints
+
+| Method | Endpoint                        | Description                                  |
+| ------ | ------------------------------- | -------------------------------------------- |
+| GET    | `/api/profile/:id`              | Retrieve complete profile                    |
+| POST   | `/api/profile`                  | Create new profile                           |
+| PUT    | `/api/profile/:id`              | Update profile information                   |
+| POST   | `/api/profile/:id/generate-bio` | **AI Generate bio from skills & experience** |
+
+### Skills & Endorsements
+
+| Method | Endpoint                                   | Description          |
+| ------ | ------------------------------------------ | -------------------- |
+| POST   | `/api/profile/:id/skills`                  | Add skill to profile |
+| DELETE | `/api/profile/:id/skills/:skillId`         | Remove skill         |
+| POST   | `/api/profile/:id/skills/:skillId/endorse` | **Endorse a skill**  |
+
+### Experience, Education & Certifications
+
+| Method | Endpoint                                  | Description          |
+| ------ | ----------------------------------------- | -------------------- |
+| POST   | `/api/profile/:id/experience`             | Add work experience  |
+| PUT    | `/api/profile/:id/experience/:expId`      | Update experience    |
+| DELETE | `/api/profile/:id/experience/:expId`      | Delete experience    |
+| POST   | `/api/profile/:id/education`              | Add education        |
+| PUT    | `/api/profile/:id/education/:eduId`       | Update education     |
+| DELETE | `/api/profile/:id/education/:eduId`       | Delete education     |
+| POST   | `/api/profile/:id/certifications`         | Add certification    |
+| PUT    | `/api/profile/:id/certifications/:certId` | Update certification |
+| DELETE | `/api/profile/:id/certifications/:certId` | Delete certification |
 
 ---
 
-## Innovation Features
+## 💡 Innovation Features
 
 ### 1. AI-Powered Bio Generator ✨
-Clicking the **"AI Bio"** button on the profile header sends the user's name, title, skills, experience, and career goals to the Claude API. Claude generates a polished, professional 2-3 sentence bio in first-person voice, which is immediately saved to the profile. The bio is cached with a timestamp so it isn't regenerated unnecessarily.
 
-**Why this feature?** Writing a compelling bio is one of the hardest parts of building a profile. An AI that understands your actual skills and experience can produce a bio that is far more contextual and accurate than generic templates.
+**Feature Description**:
+Clicking the **"Generate Bio with AI"** button on the profile header intelligently compiles the user's name, professional title, skills, experience highlights, and career goals. This data is sent to the Claude API, which generates a polished, professional 2-3 sentence bio in first-person voice. The generated bio is instantly saved to the database and displayed on the profile. Results are cached to prevent unnecessary API calls.
 
-### 2. Skill Endorsement System 👍
-Each skill badge shows a hover state with a **thumbs-up** endorsement button. Anyone can endorse a skill by entering their name. The endorsement count is shown as a badge on the skill chip, and the full list of endorsers is stored in the database. This creates social proof directly on the profile.
+**Why This Feature?**
+Writing a compelling professional bio is often the most challenging part of profile creation. Users either leave it blank or produce generic descriptions. This AI feature solves that by understanding the user's actual experience and creating contextual, authentic bios that are far more effective than templates. It transforms disconnected profile data into a cohesive professional narrative.
 
-**Why this feature?** Endorsements (popularized by LinkedIn) give skills credibility beyond self-declaration. They add a social layer to the profile and make the skills section more trustworthy and engaging.
+**Technical Implementation**:
+
+- Backend integration with Claude API
+- Intelligent context gathering from multiple profile sections
+- Database caching with timestamp tracking
+- Seamless UI/UX with loading states and success feedback
 
 ---
 
-## Project Structure
+### 2. Skill Endorsement System 👍
+
+**Feature Description**:
+Each skill badge on the profile includes a hover state with a **thumbs-up endorsement button**. Visitors can endorse any skill by entering their name and clicking endorse. The endorsement count appears as a small badge on the skill chip, and the full list of endorsers is stored in the database. Skills are ranked by endorsement count on the frontend for added credibility.
+
+**Why This Feature?**
+Self-declared skills lack credibility. Endorsements add a social proof layer that makes the skills section more trustworthy and engaging. Inspired by LinkedIn's endorsement system, it transforms skills from unverified claims into community-validated competencies. This feature encourages profile visitors to interact with the profile, creating a more dynamic and social experience.
+
+**Technical Implementation**:
+
+- Unique endorsement tracking per skill
+- Endorser deduplication (same person can't endorse twice)
+- Endorsement count ranking and sorting
+- Interactive hover states and modal for endorsement entry
+- Real-time UI updates without page refresh
+
+---
+
+### 3. Dark Mode with Persistent Settings 🌙
+
+**Feature Description**:
+The app features a fully-implemented dark mode toggle accessible in the navbar. All components are styled with both light and dark themes. User theme preference is persisted to localStorage, so the setting is remembered across sessions.
+
+**Why This Feature?**
+Modern applications need accessibility and user preference support. Dark mode reduces eye strain in low-light environments and provides aesthetic preference choice. Persistence ensures users don't have to toggle it on every visit.
+
+---
+
+### 4. Profile Completion Tracker 📊
+
+**Feature Description**:
+A visual progress indicator on the profile shows completion percentage based on filled sections. This guides users to complete their profile comprehensively.
+
+**Why This Feature?**
+Encourages users to provide complete information, resulting in richer, more professional profiles. The visual indicator creates a sense of progression and achievement.
+
+---
+
+## 📁 Project Structure
 
 ```
 gidy-profile/
-├── client/          # React + Vite + Tailwind frontend
-│   └── src/
-│       ├── components/  # Navbar, profile sections, modals, UI
-│       ├── context/     # ProfileContext (global state)
-│       ├── pages/       # ProfilePage
-│       └── services/    # Axios API layer
-└── server/          # Express + Mongoose backend
-    ├── models/      # Profile, Experience, Education, Skill, Certification
-    ├── controllers/ # Business logic for each resource
-    ├── routes/      # RESTful route definitions
-    └── utils/       # AI bio generator, profile completion calculator
+│
+├── client/                           # React + Vite Frontend
+│   ├── public/
+│   │   └── index.html               # Entry HTML file
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── layout/
+│   │   │   │   └── Navbar.jsx       # Navigation with dark mode toggle
+│   │   │   ├── profile/
+│   │   │   │   ├── ProfileHeader.jsx           # Name, title, bio, image
+│   │   │   │   ├── SkillsSection.jsx          # Skills with endorsement
+│   │   │   │   ├── ExperienceSection.jsx      # Work history
+│   │   │   │   ├── EducationSection.jsx       # Educational background
+│   │   │   │   ├── CertificationSection.jsx   # Certifications
+│   │   │   │   ├── CareerGoals.jsx            # Career vision
+│   │   │   │   └── ProfileCompletion.jsx      # Completion tracker
+│   │   │   ├── modals/
+│   │   │   │   ├── EditProfileModal.jsx       # Profile info editor
+│   │   │   │   ├── AddSkillModal.jsx          # Add skill form
+│   │   │   │   ├── AddExperienceModal.jsx     # Add experience form
+│   │   │   │   ├── AddEducationModal.jsx      # Add education form
+│   │   │   │   ├── AddCertificationModal.jsx  # Add certification form
+│   │   │   │   └── AddSocialsModal.jsx        # Social links editor
+│   │   │   └── ui/
+│   │   │       ├── DarkModeToggle.jsx         # Theme switcher
+│   │   │       └── LoadingSpinner.jsx         # Loading indicator
+│   │   ├── context/
+│   │   │   ├── ProfileContext.jsx             # Global profile state
+│   │   │   └── DarkModeContext.jsx            # Dark mode state
+│   │   ├── hooks/
+│   │   │   ├── useProfile.js                  # Profile data fetching
+│   │   │   └── useEdit.js                     # Edit mode logic
+│   │   ├── pages/
+│   │   │   └── ProfilePage.jsx                # Main profile page
+│   │   ├── services/
+│   │   │   └── api.js                         # Axios API client
+│   │   ├── utils/
+│   │   │   └── helpers.js                     # Utility functions
+│   │   ├── App.jsx                            # Root component
+│   │   ├── index.css                          # Global styles
+│   │   └── index.js                           # App entry point
+│   ├── tailwind.config.js                     # Tailwind configuration
+│   ├── package.json
+│   └── README.md
+│
+├── server/                           # Express.js Backend
+│   ├── config/
+│   │   └── db.js                   # MongoDB connection
+│   ├── models/
+│   │   ├── Profile.js              # User profile schema
+│   │   ├── Skill.js                # Skill with endorsements
+│   │   ├── Experience.js           # Work experience
+│   │   ├── Education.js            # Educational records
+│   │   └── Certification.js        # Certifications
+│   ├── controllers/
+│   │   ├── profileController.js    # Profile CRUD logic
+│   │   ├── skillController.js      # Skill & endorsement logic
+│   │   ├── experienceController.js # Experience CRUD logic
+│   │   ├── educationController.js  # Education CRUD logic
+│   │   └── certificationController.js # Certification CRUD logic
+│   ├── routes/
+│   │   ├── profileRoutes.js        # Profile endpoints
+│   │   ├── skillRoutes.js          # Skill endpoints
+│   │   ├── experienceRoutes.js     # Experience endpoints
+│   │   ├── educationRoutes.js      # Education endpoints
+│   │   └── certificationRoutes.js  # Certification endpoints
+│   ├── middleware/
+│   │   └── errorHandler.js         # Error handling middleware
+│   ├── utils/
+│   │   ├── generateBio.js          # AI bio generation logic
+│   │   └── profileCompletion.js    # Completion percentage calc
+│   ├── uploads/                    # File storage for avatars
+│   ├── server.js                   # Express app setup
+│   ├── package.json
+│   └── .env.example
+│
+├── README.md                         # This file
+└── .gitignore
 ```
+
+---
+
+## 🎨 Code Quality & Architecture Highlights
+
+### Frontend
+
+- **Component-Based Architecture**: Modular, reusable React components
+- **State Management**: Context API for global profile and theme state
+- **Custom Hooks**: `useProfile()` and `useEdit()` for clean logic separation
+- **Responsive Design**: Mobile-first Tailwind CSS implementation
+- **Modal-Driven Editing**: Non-disruptive edit experience with dedicated modals
+- **Error Handling**: Graceful error states and user feedback
+
+### Backend
+
+- **RESTful Design**: Clean, consistent API endpoints following REST conventions
+- **Separation of Concerns**: Controllers, models, and routes properly separated
+- **Database Abstraction**: Mongoose ODM for schema validation and type safety
+- **Error Middleware**: Centralized error handling across the application
+- **Utility Functions**: Reusable functions for AI integration and calculations
+
+---
+
+## 🚢 Deployment Instructions
+
+### Frontend (Vercel)
+
+```bash
+# Login to Vercel
+vercel login
+
+# Deploy from client/ directory
+cd client
+vercel --prod
+```
+
+### Backend (Render)
+
+```bash
+# Push to GitHub, then:
+# 1. Go to https://render.com
+# 2. Create new service
+# 3. Connect GitHub repo
+# 4. Set environment variables (MONGO_URI, ANTHROPIC_API_KEY)
+# 5. Deploy
+```
+
+---
+
+## 📝 Environment Variables Reference
+
+### Backend (.env)
+
+```env
+MONGO_URI=mongodb+srv://user:password@cluster.mongodb.net/gidy-profile
+ANTHROPIC_API_KEY=sk-your-api-key
+PORT=5000
+NODE_ENV=production
+```
+
+### Frontend (.env)
+
+```env
+VITE_API_BASE_URL=https://gidy-profile-backend.onrender.com
+VITE_PROFILE_ID=<your-profile-mongodb-id>
+```
+
+---
+
+## 🎓 Key Learnings & Design Decisions
+
+1. **MERN Stack**: Chose MongoDB for flexibility, Express for familiarity, and React for component reusability
+2. **Tailwind CSS**: Utility-first approach allowed rapid UI development while maintaining consistency
+3. **Claude AI**: Integrated for bio generation to add meaningful, differentiating value beyond a static clone
+4. **Endorsement System**: Inspired by real professional networks, adds social credibility layer
+5. **Dark Mode**: Implemented using Context API for global state, localStorage for persistence
+
+---
+
+## 📞 Support & Contact
+
+For questions or issues, contact: **farseen247@gmail.com**
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+**Submission Date**: March 6, 2026
