@@ -22,7 +22,7 @@ This is a complete implementation of the **"The Profile Project"** challenge fro
 ## 📱 Live Demo & Code
 
 - **Live Link**: [https://gidy-profile.vercel.app](https://gidy-profile-alpha.vercel.app/)
-- **GitHub Repository**: [https://github.com/your-username/gidy-profile](https://github.com/farseent/Gidy-Profile)
+- **GitHub Repository**: [https://github.com/farseent/gidy-profile](https://github.com/farseent/Gidy-Profile)
 
 ---
 
