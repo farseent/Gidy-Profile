@@ -13,12 +13,7 @@ const skillSchema = new mongoose.Schema(
       ref: "Profile",
       required: true,
     },
-    name: { type: String, required: true, trim: true },   // e.g. "React"
-    level: {
-      type: String,
-      enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
-      default: "Intermediate",
-    },
+    name: { type: String, required: true, trim: true }, 
     // Innovation: Skill Endorsements
     endorsements: { type: [endorsementSchema], default: [] },
     endorsementCount: { type: Number, default: 0 },

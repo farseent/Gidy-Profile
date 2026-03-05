@@ -10,7 +10,6 @@ const educationSchema = new mongoose.Schema(
     startDate:    { type: Date,   required: true },
     endDate:      { type: Date,   default: null },                 // null = present / not completed
     isCurrent:    { type: Boolean, default: false },
-    logoUrl:      { type: String, default: "" },
   },
   { timestamps: true }
 );

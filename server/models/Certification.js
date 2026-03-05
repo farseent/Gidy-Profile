@@ -10,7 +10,6 @@ const certificationSchema = new mongoose.Schema(
     issuedDate:     { type: Date },
     expiryDate:     { type: Date },
     description:    { type: String, default: "", maxlength: 200 },
-    logoUrl:        { type: String, default: "" },
   },
   { timestamps: true }
 );

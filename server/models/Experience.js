@@ -13,7 +13,6 @@ const experienceSchema = new mongoose.Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date },
     isCurrent: { type: Boolean, default: false },
-    logoUrl: { type: String, default: "" },
   },
   { timestamps: true }
 );
